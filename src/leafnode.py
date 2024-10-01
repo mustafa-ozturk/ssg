@@ -15,9 +15,10 @@ class LeafNode(HTMLNode):
         
         propstr = ""
         if self.props != None:
+            propstr = " "
             for k, v in self.props.items():
                 propstr += f"{k}=\"{v}\" "
-            propstr = propstr.strip(' ')
+            propstr = propstr.rstrip(' ')
 
-        return f"<{self.tag} {propstr}>{self.value}</{self.tag}>"
+        return f"<{self.tag}{propstr}>{self.value}</{self.tag}>"
 
