@@ -37,3 +37,6 @@ class TestHTMLNode(unittest.TestCase):
         node = HTMLNode(tag, value, children, props)
         valid_props_to_html = "href=\"https://www.github.com\" target=\"_blank\""
         self.assertEqual(node.props_to_html(), valid_props_to_html)
+
+if __name__ == "__main__":
+    unittest.main()
