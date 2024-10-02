@@ -73,3 +73,4 @@ class TestTextNodeToHtmlNode(unittest.TestCase):
         node1 = LeafNode("", "img", {"src": "urltest", "alt": "test"})
         converted_node = text_node_to_html_node(node)
         self.assertEqual(converted_node.to_html(), node1.to_html())
+

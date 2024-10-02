@@ -1,6 +1,6 @@
 import unittest
 
-from split_nodes import split_nodes_delimiter, split_nodes_link, split_nodes_images
+from inline_md import split_nodes_delimiter, split_nodes_link, split_nodes_images, text_to_textnodes
 from textnode import TextNode
 
 
@@ -52,7 +52,7 @@ class TestSplitNodes(unittest.TestCase):
         self.assertEqual(new_nodes[2], node3)
         self.assertEqual(new_nodes[3], node4)
         self.assertEqual(new_nodes[4], node5)
-    
+
     def test_images(self):
         node = TextNode(
             "![github](https://www.github.com) This is text with an image ![to boot dev](https://www.boot.dev) and ![to youtube](https://www.youtube.com/@bootdotdev)",
@@ -69,6 +69,45 @@ class TestSplitNodes(unittest.TestCase):
         self.assertEqual(new_nodes[2], node3)
         self.assertEqual(new_nodes[3], node4)
         self.assertEqual(new_nodes[4], node5)
+
+class TestTextToTextnodes(unittest.TestCase):
+        def test_with_mixed_text(self):
+            text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+            nodes = text_to_textnodes(text)
+            expected_nodes = [
+                TextNode("This is ", "text"),
+                TextNode("text", "bold"),
+                TextNode(" with an ", "text"),
+                TextNode("italic", "italic"),
+                TextNode(" word and a ", "text"),
+                TextNode("code block", "code"),
+                TextNode(" and an ", "text"),
+                TextNode("obi wan image", "image", "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" and a ", "text"),
+                TextNode("link", "link", "https://boot.dev"),
+            ]
+            for i in range(len(nodes) - 1):
+                self.assertEqual(nodes[i], expected_nodes[i])
+
+        def test_with_links_only(self):
+            text = "![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) [link](https://boot.dev)"
+            nodes = text_to_textnodes(text)
+            expected_nodes = [
+                TextNode("obi wan image", "image", "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" ", "text"),
+                TextNode("link", "link", "https://boot.dev"),
+            ]
+            for i in range(len(nodes) - 1):
+                self.assertEqual(nodes[i], expected_nodes[i])
+        
+        def test_with_text_only(self):
+            text = "test text"
+            nodes = text_to_textnodes(text)
+            expected_nodes = [
+                TextNode("test text", "text"),
+            ]
+            for i in range(len(nodes) - 1):
+                self.assertEqual(nodes[i], expected_nodes[i])
 
 if __name__ == "__main__":
     unittest.main()
