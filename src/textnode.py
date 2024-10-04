@@ -5,6 +5,7 @@ text_type_code = "code"
 text_type_link = "link"
 text_type_image = "image"
 
+# represents inline text with above text types
 class TextNode():
     # text content of the node, type of the node "bold/italic", url of an imagore or link
     def __init__(self, text, text_type, url = None):
