@@ -34,3 +34,28 @@ class LeafNode(HTMLNode):
             return self.value
         props_html = self.props_to_html()
         return f'<{self.tag}{props_html}>{self.value}</{self.tag}>'
+
+    def __repr__(self):
+        return f"LeafNode({self.tag}, {self.value}, props: {self.props}"
+
+# handles the nesting of HTML nodes inside of one another
+# any htmlnode that is not a leafnode (i.e. it has childrens) is a parentnode
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if self.tag is None:
+            raise ValueError("parentnode tag can't be none")
+        if self.children is None:
+            raise ValueError("parentnode childrent can't be none")
+
+        child_htmls = ""
+
+        for child in self.children:
+            child_htmls += child.to_html()
+        
+        return f'<{self.tag}>{child_htmls}</{self.tag}>'
+    
+    def __repr__(self):
+        return f"ParentNode({self.tag}, children: {self.children}, props: {self.props}"
