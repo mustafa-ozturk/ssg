@@ -1,4 +1,7 @@
 
+from htmlnode import HTMLNode
+from inline_md import text_to_textnodes, split_nodes_delimiter
+
 def markdown_to_blocks(markdown):
     blocks = []
     lines = markdown.split('\n\n')
@@ -58,3 +61,20 @@ def block_to_block_type(block):
             return "ordered_list"
     else:
         return "paragraph"
+
+
+def markdown_to_html_node(markdown):
+    blocks = markdown_to_blocks(markdown)
+    children = []
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        print("block type", block_type)
+        if block_type == "paragraph":
+            children_of_children = text_to_textnodes(block)
+            children.append(HTMLNode('p', None, children_of_children, None))
+        if block_type == "heading":
+            children_of_children =text_to_textnodes(block)
+            children.append(HTMLNode('h1', None, children_of_children, None))
+
+    print("children------->", children)
+    return HTMLNode('div', None, children, None)
