@@ -1,6 +1,4 @@
 
-
-
 # represents a node in an html document tree: <p>, <a>, etc
 # its purpose is to render itself as HTML
 class HTMLNode():
@@ -23,3 +21,16 @@ class HTMLNode():
 
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, props: {self.props})"
+
+# a type of HTMLNode that represents a single HTML tag with no children 
+class LeafNode(HTMLNode):
+    def __init__(self, tag, value, props=None):
+        super().__init__(tag, value, None, props)
+
+    def to_html(self):
+        if self.value is None:
+            raise ValueError("leaf node value can't be none")
+        if self.tag is None:
+            return self.value
+        props_html = self.props_to_html()
+        return f'<{self.tag}{props_html}>{self.value}</{self.tag}>'
