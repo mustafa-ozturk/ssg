@@ -49,3 +49,48 @@ def extract_markdown_links(text):
     pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(pattern, text)
     return matches
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for old_node in old_nodes:
+        extracted_links = extract_markdown_links(old_node.text)
+        if len(extracted_links) == 0:
+            return old_nodes
+        old_node_text = old_node.text
+        for extracted_link in extracted_links:
+            link = f"[{extracted_link[0]}]({extracted_link[1]})"
+            sections = old_node_text.split(link, 1)
+            
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], text_type_text))
+            new_nodes.append(TextNode(extracted_link[0], text_type_link, extracted_link[1]))
+
+            if len(extract_markdown_links(sections[1])) == 0 and sections[1] != "":
+                new_nodes.append(TextNode(sections[1], text_type_text))
+
+            # remove the first link from the string if there is any
+            old_node_text = old_node_text[len(sections[0]) + len(link):]
+    return new_nodes
+
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for old_node in old_nodes:
+        extracted_links = extract_markdown_images(old_node.text)
+        if len(extracted_links) == 0:
+            return old_nodes
+        old_node_text = old_node.text
+        for extracted_link in extracted_links:
+            image = f"![{extracted_link[0]}]({extracted_link[1]})"
+            sections = old_node_text.split(image, 1)
+            
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], text_type_text))
+            new_nodes.append(TextNode(extracted_link[0], text_type_image, extracted_link[1]))
+            
+            if len(extract_markdown_images(sections[1])) == 0 and sections[1] != "":
+                new_nodes.append(TextNode(sections[1], text_type_text))
+
+            # remove the first image from the string if there is any
+            old_node_text = old_node_text[len(sections[0]) + len(image):]
+    return new_nodes
