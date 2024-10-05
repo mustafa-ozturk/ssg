@@ -7,7 +7,6 @@ markdown_block_type_unordered_list = "unordered_list"
 markdown_block_type_ordered_list = "ordered_list"
 
 
-# note: solution used .startswith
 def markdown_to_blocks(markdown):
     blocks = []
     for block in markdown.split("\n\n"): 
@@ -17,7 +16,7 @@ def markdown_to_blocks(markdown):
         blocks.append(block)
     return blocks
 
-
+# note: solution used .startswith
 def block_to_block_type(block):
     if block[0] == "#" and block[1] == " " and (block[2] != " " and block[2] != ""):
         return markdown_block_type_heading
