@@ -17,12 +17,8 @@ def traverse_copy(src, dst):
 def copy_src_to_clean_dest(src, dest):
     if os.path.exists(src) != True:
         raise Exception("Invalid src")
-    if os.path.exists(dest) != True:
-        os.mkdir(dest)
-    else:
-        # create a clean dir
-        shutil.rmtree(dest)
-        os.mkdir(dest)
+    shutil.rmtree(dest)
+    os.mkdir(dest)
 
     # recursively travers src directory
     traverse_copy(src, dest)

@@ -1,5 +1,6 @@
 import re
 
+from blocks_markdown import markdown_to_blocks
 from textnode import (
         TextNode,
         text_type_text,
@@ -104,3 +105,9 @@ def text_to_textnodes(text):
     link_nodes = split_nodes_image(code_nodes)
     final_nodes = split_nodes_link(link_nodes)
     return final_nodes
+
+def extract_title(markdown):
+    if markdown.startswith('# ') == False: 
+        raise Exception("Markdown does not have a header")
+    heading_block = markdown_to_blocks(markdown)
+    return heading_block[0][2:].strip(' ')

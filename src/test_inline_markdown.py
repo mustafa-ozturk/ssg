@@ -1,11 +1,13 @@
 import unittest 
 from inline_markdown import (
+        extract_title,
         split_nodes_delimiter,
         extract_markdown_links,
         extract_markdown_images,
         split_nodes_link,
         split_nodes_image,
-        text_to_textnodes
+        text_to_textnodes,
+        extract_title
 )
 from textnode import (
         TextNode,
@@ -266,6 +268,9 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             nodes,
         )
+
+    def test_extract_title(self):
+        self.assertEqual(extract_title("# Hello"), "Hello")
 
 if __name__ == "__main__":
     unittest.main()
