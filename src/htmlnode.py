@@ -100,8 +100,16 @@ def markdown_to_html_node(markdown):
                 if c == '#':
                     h_size += 1
 
+            heading = block[h_size + 1:]
+            text_nodes = text_to_textnodes(heading)
+            leaf_nodes = []
+            for text_node in text_nodes:
+                leaf_nodes.append(text_node_to_html_node(text_node))
+            child_nodes.append(ParentNode(f"h{h_size}", leaf_nodes))
+
+
             #                                                        + 1 to remove the space
-            child_nodes.append(ParentNode(f"h{h_size}", [LeafNode(None, block[h_size + 1:])]))
+            # child_nodes.append(ParentNode(f"h{h_size}", [LeafNode(None, block[h_size + 1:])]))
 
         if block_type == markdown_block_type_unordered_list:
             list_items = block.split('\n')
@@ -144,6 +152,7 @@ def markdown_to_html_node(markdown):
 
         if block_type == markdown_block_type_code:
             code_text = block[3:-3]
+            code_text = code_text.strip()
             child_nodes.append(ParentNode("pre", [LeafNode("code", code_text)]))
         
         if block_type == markdown_block_type_quote:

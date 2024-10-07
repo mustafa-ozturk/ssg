@@ -42,4 +42,17 @@ def generate_page(from_path, template_path, dest_path):
     f.close()
     
 
+def generate_page_recursive(dir_path_content, template_path, dest_dir_path):
+    contents = os.listdir(dir_path_content)
+
+    for content in contents:
+        path = os.path.join(dir_path_content, content)
+        if os.path.isfile(path) != True:
+            print("path:", path)
+            generate_page_recursive(path, template_path, dest_dir_path)
+        else:
+            destination = path.replace("content", "public")
+            destination = destination.replace(".md", ".html")
+            print(f"generate_page({path}, {template_path}, {destination})")
+            generate_page(path, template_path, destination)
 
